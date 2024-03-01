@@ -1,0 +1,59 @@
+#include <iostream>
+using namespace std;
+
+struct ListNode {
+    int data;
+    ListNode* next;
+};
+
+ListNode* insertNode(ListNode* head, int data) {
+    ListNode* newNode = new ListNode;
+    newNode->data = data;
+    newNode->next = nullptr;
+
+    if (head == nullptr) {
+        head = newNode;
+    } else {
+        ListNode* temp = head;
+        while (temp->next != nullptr) {
+            temp = temp->next;
+        }
+        temp->next = newNode;
+    }
+    return head;
+}
+
+void printList(ListNode* head) {
+    while (head != nullptr) {
+        cout << head->data << " ";
+        head = head->next;
+    }
+    cout << endl;
+}
+
+int main() {
+    int numNodes;
+    cout << "Enter number of nodes: ";
+    cin >> numNodes;
+
+    ListNode* head = nullptr;
+
+    cout << "Enter values for each node:" << endl;
+    for (int i = 0; i < numNodes; ++i) {
+        int value;
+        cin >> value;
+        head = insertNode(head, value);
+    }
+
+    cout << "The linked list:" << endl;
+    printList(head);
+
+    ListNode* temp;
+    while (head != nullptr) {
+        temp = head->next;
+        delete head;
+        head = temp;
+    }
+
+    return 0;
+}
