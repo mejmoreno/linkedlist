@@ -1,0 +1,198 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+struct Player {
+    string nickname;
+    int age;
+    double scores[5];
+};
+
+struct Node {
+    Player player;
+    Node* next;
+};
+
+Node* head = nullptr;
+
+void addRecord(const Player& player) {
+    Node* newNode = new Node;
+    newNode->player = player;
+    newNode->next = head;
+    head = newNode;
+}
+
+void viewRecords() {
+    Node* current = head;
+    while (current != nullptr) {
+        cout << "Nickname: " << current->player.nickname << endl;
+        cout << "Age: " << current->player.age << endl;
+        cout << "Scores: ";
+        for (int i = 0; i < 5; ++i) {
+            cout << current->player.scores[i] << " ";
+        }
+        cout << endl;
+        cout << "----------------------------------" << endl;
+        current = current->next;
+    }
+}
+
+void computeAverage() {
+    Node* current = head;
+    while (current != nullptr) {
+        double sum = 0;
+        for (int i = 0; i < 5; ++i) {
+            sum += current->player.scores[i];
+        }
+        double average = sum / 5.0;
+        cout << "Nickname: " << current->player.nickname << endl;
+        cout << "Average Score: " << average << endl;
+        cout << "----------------------------------" << endl;
+        current = current->next;
+    }
+}
+
+void showMaxAverage() {
+    Node* current = head;
+    double maxAverage = -1;
+    while (current != nullptr) {
+        double sum = 0;
+        for (int i = 0; i < 5; ++i) {
+            sum += current->player.scores[i];
+        }
+        double average = sum / 5.0;
+        if (average > maxAverage) {
+            maxAverage = average;
+        }
+        current = current->next;
+    }
+    current = head;
+    while (current != nullptr) {
+        double sum = 0;
+        for (int i = 0; i < 5; ++i) {
+            sum += current->player.scores[i];
+        }
+        double average = sum / 5.0;
+        if (average == maxAverage) {
+            cout << "Nickname: " << current->player.nickname << endl;
+            cout << "Average Score: " << average << endl;
+            cout << "----------------------------------" << endl;
+        }
+        current = current->next;
+    }
+}
+
+void showMinAverage() {
+    Node* current = head;
+    double minAverage = 100;
+    while (current != nullptr) {
+        double sum = 0;
+        for (int i = 0; i < 5; ++i) {
+            sum += current->player.scores[i];
+        }
+        double average = sum / 5.0;
+        if (average < minAverage) {
+            minAverage = average;
+        }
+        current = current->next;
+    }
+    current = head;
+    while (current != nullptr) {
+        double sum = 0;
+        for (int i = 0; i < 5; ++i) {
+            sum += current->player.scores[i];
+        }
+        double average = sum / 5.0;
+        if (average == minAverage) {
+            cout << "Nickname: " << current->player.nickname << endl;
+            cout << "Average Score: " << average << endl;
+            cout << "----------------------------------" << endl;
+        }
+        current = current->next;
+    }
+}
+
+void openFile() {
+    FILE *file = fopen("player_records.txt", "w");
+    if (file == nullptr) {
+        cout << "Error opening file." << endl;
+        return;
+    }
+    Node* current = head;
+    while (current != nullptr) {
+        fprintf(file, "%s\n", current->player.nickname.c_str());
+        fprintf(file, "%d\n", current->player.age);
+        for (int i = 0; i < 5; ++i) {
+            fprintf(file, "%.2f ", current->player.scores[i]);
+        }
+        fprintf(file, "\n");
+        current = current->next;
+    }
+    fclose(file);
+    cout << "Records saved to 'player_records.txt'." << endl;
+}
+
+void closeFile() {
+    cout << "File closed." << endl;
+}
+
+int main() {
+    int choice;
+    do {
+        cout << "==============================================\n";
+        cout << "                                           MENU\n";
+        cout << "==============================================\n";
+        cout << "1. Add record\n";
+        cout << "2. View players records\n";
+        cout << "3. Compute for the average\n";
+        cout << "4. Show the player(s) who gets the max average\n";
+        cout << "5. Show the player(s) who gets the min average\n";
+        cout << "6. Open the file\n";
+        cout << "7. Close the File\n";
+        cout << "8. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1: {
+                Player player;
+                cout << "Enter Nickname: ";
+                cin >> player.nickname;
+                cout << "Enter Age: ";
+                cin >> player.age;
+                cout << "Enter 5 scores: ";
+                for (int i = 0; i < 5; ++i) {
+                    cin >> player.scores[i];
+                }
+                addRecord(player);
+                break;
+            }
+            case 2:
+                viewRecords();
+                break;
+            case 3:
+                computeAverage();
+                break;
+            case 4:
+                showMaxAverage();
+                break;
+            case 5:
+                showMinAverage();
+                break;
+            case 6:
+                openFile();
+                break;
+            case 7:
+                closeFile();
+                break;
+            case 8:
+                cout << "Exiting...";
+                break;
+            default:
+                cout << "Invalid choice. Please enter a number between 1 and 8.";
+        }
+    } while (choice != 8);
+
+    return 0;
+}
